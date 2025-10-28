@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout - RTYautoparts</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f3f4f6;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #1e3a8a;
+      color: white;
+      padding: 15px;
+      text-align: center;
+    }
+
+    .checkout-container {
+      max-width: 850px;
+      margin: 50px auto;
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    }
+
+    .checkout-container h2 {
+      text-align: center;
+      color: #1e3a8a;
+      margin-bottom: 20px;
+    }
+
+    .cart-summary {
+      margin-top: 10px;
+      border-top: 2px solid #ccc;
+      border-bottom: 2px solid #ccc;
+      padding: 20px 0;
+    }
+
+    .cart-summary ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .cart-summary li {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .cart-summary li:last-child {
+      border-bottom: none;
+    }
+
+    .cart-summary strong {
+      color: #1e3a8a;
+    }
+
+    .total {
+      text-align: right;
+      font-weight: bold;
+      font-size: 22px;
+      margin-top: 20px;
+      color: #111827;
+    }
+
+    .qr-section {
+      text-align: center;
+      margin-top: 40px;
+    }
+
+    .qr-section img {
+      width: 250px;
+      height: 250px;
+      border-radius: 10px;
+      margin-top: 10px;
+      border: 3px solid #2563eb;
+    }
+
+    .proof-section {
+      margin-top: 40px;
+    }
+
+    .proof-section h3 {
+      color: #1e3a8a;
+    }
+
+    .proof-section input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      margin-top: 10px;
+      font-size: 16px;
+    }
+
+    button {
+      display: block;
+      margin: 30px auto 0;
+      background-color: #2563eb;
+      color: white;
+      border: none;
+      padding: 14px 40px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #1e40af;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Checkout - RTYautoparts</h1>
+  </header>
+
+  <div class="checkout-container">
+    <h2>Your Order Summary</h2>
+    <div class="cart-summary">
+      <ul id="checkout-items"></ul>
+      <p class="total">Total: $<span id="checkout-total">0.00</span></p>
+    </div>
+
+    <div class="qr-section">
+      <h3>Scan to Pay with Bank</h3>
+      <!-- Replace 'bankqr.png' with your real QR image -->
+      <img src="p12.jpg" alt="Bank QR Code">
+      <p>Use your mobile banking app to scan and pay securely.</p>
+    </div>
+
+<a href="https://docs.google.com/forms/d/e/1FAIpQLSf-3uKitS7u1nWaf_d7OIwlkJ5YIep5VOD-upnB01fSzavBcw/viewform?usp=dialog" target="_blank" class="proof-button">Submit Proof</a>
+
+
+    <button id="confirm-payment">Confirm Payment</button>
+  </div>
+
+  <script>
+    // Load cart from localStorage
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const checkoutItems = document.getElementById('checkout-items');
+    const checkoutTotal = document.getElementById('checkout-total');
+
+    let total = 0;
+
+    if (cart.length === 0) {
+      const emptyMsg = document.createElement('p');
+      emptyMsg.textContent = "Your cart is empty.";
+      emptyMsg.style.textAlign = "center";
+      checkoutItems.appendChild(emptyMsg);
+    } else {
+      cart.forEach(item => {
+        total += item.price;
+        const li = document.createElement('li');
+        li.innerHTML = `<strong>${item.name}</strong> <span>$${item.price.toFixed(2)}</span>`;
+        checkoutItems.appendChild(li);
+      });
+    }
+
+    checkoutTotal.innerText = total.toFixed(2);
+
+    // Confirm payment button
+    document.getElementById('confirm-payment').addEventListener('click', () => {
+      const fileInput = document.getElementById('payment-proof');
+      if (!fileInput.files.length) {
+        alert('⚠️ Please upload your proof of payment before confirming.');
+        return;
+      }
+      alert('✅ Thank you for your payment! Your order is being processed.');
+      localStorage.removeItem('cart'); // clear cart
+      window.location.href = 'thankyou.html'; // redirect to thank you page
+    });
+  </script>
+</body>
+</html>
+
+<script>
+  // Confirm payment button
+  document.getElementById('confirm-payment').addEventListener('click', () => {
+    alert('✅ A customer has submitted a payment proof!');
+    window.location.href = 'thankyou.html'; // redirect to thank you page
+  });
+</script>
+
+
