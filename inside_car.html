@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Panha's Product Store</title>
+  <title>RTYautoparts</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <!-- Header -->
   <header>
     <div class="container">
-      <h1>KonKhmer</h1>
+      <h1>RTYautoparts</h1>
       <nav>
         <a href="index.html">Home</a>
         <a href="inside_car.html">Inside Accessories</a>
@@ -20,6 +20,20 @@
     </div>
   </header>
   
+
+<!-- Cart Icon and Container -->
+<div class="cart-container">
+  <button id="cart-button">🛒 Cart (<span id="cart-count">0</span>)</button>
+  <div id="cart-box" class="hidden">
+    <h3>Your Cart</h3>
+    <ul id="cart-items"></ul>
+    <p>Total: $<span id="cart-total">0.00</span></p>
+    <button id="checkout-button" onclick="window.location.href='checkout.html'">Checkout</button>
+
+  </div>
+</div>
+
+
 
 <section id="products" class="products-section">
   <h3>INSIDE MATARIALS</h3>
@@ -32,7 +46,8 @@
         <h4>Car Seat Back Towel Box Multifunctional Storage</h4>
         <p></p>
         <span>$120.00</span>
-        <button>Buy Now</button>
+        <button onclick="addToCart('Headlight for Mazda 3', 120.00)">Add to Cart</button>
+
         
       </div>
       
@@ -43,7 +58,8 @@
         <h4>Mazda Steering Wheel Carbon Fiber/Flat Bottom Modification</h4>
         <p></p>
         <span>$89.99</span>
-        <button>Buy Now</button>
+        <button onclick="addToCart('Headlight for Mazda 3', 120.00)">Add to Cart</button>
+
       </div>
 
             <!-- Product 3 -->
@@ -54,7 +70,8 @@
         <h4>Mobile Phone holder with wireless charnging</h4>
         <p></p>
         <span>$89.99</span>
-        <button>Buy Now</button>
+        <button onclick="addToCart('Headlight for Mazda 3', 120.00)">Add to Cart</button>
+
       </div>
 
                   <!-- Product 4 -->
@@ -63,11 +80,14 @@
         <h4>Steering wheel For Mazda</h4>
         <p></p>
         <span>$89.99</span>
-        <button>Buy Now</button>
+        <button onclick="addToCart('Headlight for Mazda 3', 120.00)">Add to Cart</button>
       </div>
 
     </div>
   </section>
+
+
+
 
   <!-- Footer -->
   <footer>
@@ -75,3 +95,63 @@
   </footer>
 </body>
 </html>
+
+
+<script>
+  let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+  const cartCount = document.getElementById('cart-count');
+  const cartBox = document.getElementById('cart-box');
+  const cartItems = document.getElementById('cart-items');
+  const cartTotal = document.getElementById('cart-total');
+
+  document.getElementById('cart-button').addEventListener('click', () => {
+    cartBox.classList.toggle('hidden');
+  });
+
+  document.querySelectorAll('.product-card button').forEach(button => {
+    button.addEventListener('click', event => {
+      const card = event.target.closest('.product-card');
+      const name = card.querySelector('h4').innerText;
+      const price = parseFloat(card.querySelector('span').innerText.replace('$', ''));
+
+      // Add item to cart
+      cart.push({ name, price });
+      saveCart();
+      updateCart();
+    });
+  });
+
+  function updateCart() {
+    cartItems.innerHTML = '';
+    let total = 0;
+
+    cart.forEach((item, index) => {
+      total += item.price;
+
+      const li = document.createElement('li');
+      li.innerHTML = `
+        ${item.name} - $${item.price.toFixed(2)}
+        <button onclick="removeFromCart(${index})" style="margin-left:10px; background:red; color:white; border:none; border-radius:5px; cursor:pointer;">Remove</button>
+      `;
+      cartItems.appendChild(li);
+    });
+
+    cartCount.innerText = cart.length;
+    cartTotal.innerText = total.toFixed(2);
+  }
+
+  function removeFromCart(index) {
+    cart.splice(index, 1);
+    saveCart();
+    updateCart();
+  }
+
+  function saveCart() {
+    localStorage.setItem('cart', JSON.stringify(cart));
+  }
+
+  // ✅ Load existing cart when page loads
+  updateCart();
+</script>
+
